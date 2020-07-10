@@ -23,7 +23,7 @@ def extract_plenum_new_transcript(plenum_file_path):
     interaction = ""
     speaker_name = ""
     speaker_party = ""
-    start_talking = [i for i, line in enumerate(no_empty_lines) if 'הצעות לסדר-היום' in line][0]
+    start_talking = [i for i, line in enumerate(no_empty_lines) if 'תוכן העניינים' in line][0]
     status_changed = 1
     for line in no_empty_lines[start_talking + 1:]:
         if "<< הלסי >>" in line:
