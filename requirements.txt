@@ -5,3 +5,5 @@ networkx
 pyodata
 tqdm
 googledrivedownloader
+python-docx
+loguru 
