@@ -6,6 +6,11 @@ import pandas as pd
 from knesset_social_dynamics.parsers.utils import extract_rolling_windows
 
 
+def extract_transcript_adjacency(transcript, output_path):
+    G = extract_transcript_graph(transcript, g_type="committee_breaking")
+    adj_matrix = nx.convert_matrix.to_pandas_adjacency(G)
+    adj_matrix.to_csv(output_path)
+
 def extract_transcript_graph(transcript, g_type='adjust_speaker'):
     if g_type == 'adjust_speaker':
         # TODO: use committee_trans.shift() and not the windows func
@@ -87,6 +92,7 @@ def extract_transcript_graph(transcript, g_type='adjust_speaker'):
         df = pd.DataFrame(committee_breaking_pairs, columns=['source', 'target'])
         df = df.drop_duplicates()
         df = df[df.source != df.target]
-        df['source'] = df['source'].apply(lambda x: x[::-1])
-        df['target'] = df['target'].apply(lambda x: x[::-1])
+        # Flip names
+        #df['source'] = df['source'].apply(lambda x: x[::-1])
+        #df['target'] = df['target'].apply(lambda x: x[::-1])
         return nx.convert_matrix.from_pandas_edgelist(df)
