@@ -8,8 +8,21 @@ from knesset_social_dynamics.parsers.utils import extract_rolling_windows
 
 def extract_transcript_adjacency(transcript, output_path):
     G = extract_transcript_graph(transcript, g_type="committee_breaking")
-    adj_matrix = nx.convert_matrix.to_pandas_adjacency(G)
+    extract_adjacency_matrix(G, output_path)
+
+
+def extract_adjacency_matrix(graph, output_path):
+    adj_matrix = nx.convert_matrix.to_pandas_adjacency(graph)
     adj_matrix.to_csv(output_path)
+
+
+def extract_features_matrix(graph, output_path):
+    km_df = pd.read_csv('data/knesset_members_metadata.csv')
+    km_df['FullName'] = km_df.apply(lambda x: " ".join([x.FirstName, x.LastName]), axis=1)
+    km_df.set_index('FullName', inplace=True)
+    sliced_info = km_df.loc[list(graph.nodes())]
+    sliced_info.to_csv(output_path)
+
 
 def extract_transcript_graph(transcript, g_type='adjust_speaker'):
     if g_type == 'adjust_speaker':
@@ -93,6 +106,6 @@ def extract_transcript_graph(transcript, g_type='adjust_speaker'):
         df = df.drop_duplicates()
         df = df[df.source != df.target]
         # Flip names
-        #df['source'] = df['source'].apply(lambda x: x[::-1])
-        #df['target'] = df['target'].apply(lambda x: x[::-1])
-        return nx.convert_matrix.from_pandas_edgelist(df)
+        # df['source'] = df['source'].apply(lambda x: x[::-1])
+        # df['target'] = df['target'].apply(lambda x: x[::-1])
+        return nx.convert_matrix.from_pandas_edgelist(df, create_using=nx.DiGraph)
