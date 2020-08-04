@@ -39,7 +39,7 @@ def extract_transcript_graph(transcript, g_type='adjust_speaker'):
         df = df[df.source != df.target]
         df['source'] = df['source'].apply(lambda x: x[::-1])
         df['target'] = df['target'].apply(lambda x: x[::-1])
-        return nx.convert_matrix.from_pandas_edgelist(df)
+        graph =  nx.convert_matrix.from_pandas_edgelist(df)
 
     if g_type == "direct_indirect":
         sequence_speakers = []
@@ -81,7 +81,7 @@ def extract_transcript_graph(transcript, g_type='adjust_speaker'):
         df = df[df.source != df.target]
         df['source'] = df['source'].apply(lambda x: x[::-1])
         df['target'] = df['target'].apply(lambda x: x[::-1])
-        return nx.convert_matrix.from_pandas_edgelist(df)
+        graph = nx.convert_matrix.from_pandas_edgelist(df)
 
     if g_type == "committee_breaking":
         sequence_speakers = []
@@ -99,7 +99,7 @@ def extract_transcript_graph(transcript, g_type='adjust_speaker'):
 
         committee_breaking_pairs = []
         for i, (speaker, text) in enumerate(zip(sequence_speakers, texts)):
-            if '- - -' in text:
+            if text.endswith('- - -'):
                 committee_breaking_pairs.append((sequence_speakers[i + 1], speaker))
 
         df = pd.DataFrame(committee_breaking_pairs, columns=['source', 'target'])
@@ -108,4 +108,11 @@ def extract_transcript_graph(transcript, g_type='adjust_speaker'):
         # Flip names
         # df['source'] = df['source'].apply(lambda x: x[::-1])
         # df['target'] = df['target'].apply(lambda x: x[::-1])
-        return nx.convert_matrix.from_pandas_edgelist(df, create_using=nx.DiGraph)
+        graph = nx.convert_matrix.from_pandas_edgelist(df, create_using=nx.DiGraph)
+
+    # Add missing nodes if needed
+    for speaker in transcript['speaker_name'].unique():
+        if not speaker in graph.nodes():
+            graph.add_node(speaker)
+
+    return graph
