@@ -1,5 +1,5 @@
 import docx
-import win32com.client
+#import win32com.client
 from loguru import logger
 
 
@@ -22,7 +22,7 @@ def extract_new_raw_protocol(file_path):
     return paras
 
 
-def extract_old_raw_protocol(file_path):
-    logger.debug("Parsing old-version protocoal")
-    doc = win32com.client.GetObject(file_path)
-    return doc.Content.Text.splitlines()
+# def extract_old_raw_protocol(file_path):
+#     logger.debug("Parsing old-version protocoal")
+#     doc = win32com.client.GetObject(file_path)
+#     return doc.Content.Text.splitlines()
