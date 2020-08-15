@@ -4,11 +4,11 @@ from loguru import logger
 
 
 def extract_raw_protocol(file_path):
-    try:
-        return extract_new_raw_protocol(file_path)
-    except Exception as e:
-        print(e)
-        return extract_old_raw_protocol(file_path)
+    #try:
+    return extract_new_raw_protocol(file_path)
+    # except Exception as e:
+    #     print(e)
+    #     #return extract_old_raw_protocol(file_path)
 
 
 def extract_new_raw_protocol(file_path):
